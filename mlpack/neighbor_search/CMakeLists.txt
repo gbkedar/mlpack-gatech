@@ -1,0 +1,75 @@
+cmake_minimum_required(VERSION 2.8)
+
+# Define the files we need to compile
+# Anything not in this list will not be compiled into the output library
+# Do not include test programs here
+set(SOURCES
+  neighbor_search.h
+  neighbor_search_impl.h
+  sort_policies/nearest_neighbor_sort.h
+  sort_policies/nearest_neighbor_sort.cc
+  sort_policies/nearest_neighbor_sort_impl.h
+  sort_policies/furthest_neighbor_sort.h
+  sort_policies/furthest_neighbor_sort.cc
+  typedef.h
+)
+
+# add directory name to sources
+set(DIR_SRCS)
+foreach(file ${SOURCES})
+  set(DIR_SRCS ${DIR_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+endforeach()
+# append sources (with directory name) to list of all MLPACK sources (used at the parent scope)
+set(MLPACK_SRCS ${MLPACK_SRCS} ${DIR_SRCS} PARENT_SCOPE)
+
+# test executable
+add_executable(allknn_test
+   allknn_test.cc
+)
+# link dependencies of test executable
+target_link_libraries(allknn_test
+   mlpack
+   fastlib
+   boost_unit_test_framework
+)
+
+# main executable
+add_executable(allknn
+   allknn_main.cc
+)
+# link dependencies of allknn
+target_link_libraries(allknn
+   mlpack
+   fastlib
+)
+
+# test executable
+add_executable(allkfn_test
+   allkfn_test.cc
+)
+# link dependencies of test executable
+target_link_libraries(allkfn_test
+   mlpack
+   fastlib
+   boost_unit_test_framework
+)
+
+# main executable
+add_executable(allkfn
+   allkfn_main.cc
+)
+# link dependencies of allknn
+target_link_libraries(allkfn
+   mlpack
+   fastlib
+)
+
+# test for sorting policies
+add_executable(sort_policy_test
+  sort_policies/sort_policy_test.cc
+)
+target_link_libraries(sort_policy_test
+  mlpack
+  fastlib
+  boost_unit_test_framework
+)
